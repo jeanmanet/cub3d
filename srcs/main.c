@@ -6,14 +6,12 @@
 /*   By: jmanet <jmanet@student.42nice.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 15:47:55 by jmanet            #+#    #+#             */
-/*   Updated: 2023/09/05 16:29:24 by jmanet           ###   ########.fr       */
+/*   Updated: 2023/09/05 18:08:50 by jmanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../includes/cub3d.h"
-
-
 
 char *map[] = {
     "1111111111",
@@ -27,6 +25,8 @@ char *map[] = {
     "1000000001",
     "1111111111"
 };
+
+
 
 void draw_player(t_data *session, int x, int y)
 {
@@ -86,7 +86,6 @@ void	trace_frame(t_data *session, int frame_height, int angle)
 	nbframe = (session->winwidth/100) * (PLAYER_FOV / 100);
 	startx = angle * nbframe;
 	starty = (session->winheight - frame_height) / 2;
-	printf("nbframe = %i\n", nbframe);
 
 	while (i < session->winheight)
 	{
@@ -125,8 +124,6 @@ void	draw_walls(t_data *session, double ray_x, double ray_y, int angle)
 
 void draw_ray(t_data *session)
 {
-	double ray_direction_x;
-	double ray_direction_y;
 	int		i;
 
 	session->x_ray = session->player_x * TILE_SIZE;
@@ -140,13 +137,14 @@ void draw_ray(t_data *session)
 	{
 		session->x_ray = session->player_x * TILE_SIZE;
 		session->y_ray = session->player_y * TILE_SIZE;
-		ray_direction_x = cos((session->player_angle_view + i) * M_PI / 180);
-		ray_direction_y = sin((session->player_angle_view + i) * M_PI / 180);
+		session->ray_direction_x = cos((session->player_angle_view + (i - PLAYER_FOV / 2)) * M_PI / 180);
+		session->ray_direction_y = sin((session->player_angle_view + (i - PLAYER_FOV / 2)) * M_PI / 180);
+
 		while (1)
 		{
-			// mlx_pixel_put(session->mlx, session->win, session->x_ray, session->y_ray, 0xFF0000);
-			session->x_ray += ray_direction_x;
-			session->y_ray += ray_direction_y;
+			//mlx_pixel_put(session->mlx, session->win, session->x_ray, session->y_ray, 0xFF0000);
+			session->x_ray += session->ray_direction_x;
+			session->y_ray += session->ray_direction_y;
 			// printf("h : %i, w : %i\n", session->winheight, session->winwidth);
 			// printf("xray : %f, yray : %f\n", session->x_ray, session->y_ray);
 			// if (session->x_ray > session->winwidth || (int)session->x_ray < 0)
@@ -165,8 +163,8 @@ void draw_ray(t_data *session)
 
 int	ft_loop(t_data *session)
 {
-	// draw_map(session);
-	// draw_player(session, session->player_x * TILE_SIZE, session->player_y * TILE_SIZE); // Couleur rouge pour le joueur (P)
+	//draw_map(session);
+	//draw_player(session, session->player_x * TILE_SIZE, session->player_y * TILE_SIZE); // Couleur rouge pour le joueur (P)
 	draw_ray(session);
 
 	return (0);
@@ -190,40 +188,7 @@ int	ft_exit(t_data *session)
 	exit (0);
 }
 
-void ft_move_player(t_data *session, int key_input)
-{
-	int x = 0;
-	int y = 0;
 
-	if (key_input == 0)
-	{
-		x = (int)(session->player_x - 0.1);
-		y = (int)(session->player_y);
-		if (map[y][x] != '1')
-			session->player_x -= 0.1;
-	}
-	if (key_input == 2)
-	{
-		x = (int)(session->player_x + 0.1);
-		y = (int)(session->player_y);
-		if (map[y][x] != '1')
-			session->player_x += 0.1;
-	}
-	if (key_input == 1)
-	{
-		x = (int)(session->player_x);
-		y = (int)(session->player_y + 0.1);
-		if (map[y][x] != '1')
-			session->player_y += 0.1;
-	}
-	if (key_input == 13)
-	{
-		x = (int)(session->player_x);
-		y = (int)(session->player_y - 0.1);
-		if (map[y][x] != '1')
-			session->player_y -= 0.1;
-	}
-}
 
 int	ft_keypress(int key_input, t_data *session)
 {
@@ -236,8 +201,12 @@ int	ft_keypress(int key_input, t_data *session)
 		session->player_angle_view -= 10;
 	if (key_input == 124)
 		session->player_angle_view += 10;
+	if (session->player_angle_view == 360)
+		session->player_angle_view = 0;
+	if (session->player_angle_view == -10)
+		session->player_angle_view = 350;
 	ft_move_player(session, key_input);
-	// printf("L'angle de vue du joureur est : %i\n", session->player_angle_view);
+	printf("L'angle de vue du joureur est : %i\n", session->player_angle_view);
 	return (0);
 }
 
@@ -248,6 +217,8 @@ void	data_init(t_data *session)
 	session->player_x = 2;
 	session->player_y = 2;
 	session->player_angle_view = 20;
+	session->player_direction_x = cos((session->player_angle_view + (PLAYER_FOV/2)) * M_PI / 180);
+	session->player_direction_y = sin((session->player_angle_view + (PLAYER_FOV/2)) * M_PI / 180);
 }
 int	main(int argc, char **argv)
 {

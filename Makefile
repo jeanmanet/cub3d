@@ -6,13 +6,13 @@
 #    By: jmanet <jmanet@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/29 11:31:39 by jmanet            #+#    #+#              #
-#    Updated: 2023/09/05 11:46:57 by jmanet           ###   ########.fr        #
+#    Updated: 2023/09/05 17:48:44 by jmanet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3d
 
-SRCS = ${wildcard srcs/*.c getnextline/*.c}
+SRCS = ${wildcard srcs/*.c}
 
 LIBS = -lmlx ${LIBFTPRINTF}
 
