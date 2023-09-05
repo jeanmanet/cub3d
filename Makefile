@@ -6,7 +6,7 @@
 #    By: jmanet <jmanet@student.42nice.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/29 11:31:39 by jmanet            #+#    #+#              #
-#    Updated: 2023/09/01 16:32:04 by jmanet           ###   ########.fr        #
+#    Updated: 2023/09/05 11:46:57 by jmanet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ OBJS_BONUS = ${SRCS_BONUS:.c=.o}
 all : ${NAME}
 
 ${NAME} : ${OBJS} ${LIBFTPRINTF}
-	${CC} ${SRCS} -I ${INCLUDES} ${LIBS} ${FLAGS} -o ${NAME}
+	${CC} ${SRCS} -I ${INCLUDES} ${LIBS} ${FLAGS} -o ${NAME} -g
 
 bonus : ${OBJS_BONUS} ${LIBFTPRINTF}
 	${CC} ${SRCS_BONUS} -I ${INCLUDES} ${LIBS} ${FLAGS} -o ${NAME}
